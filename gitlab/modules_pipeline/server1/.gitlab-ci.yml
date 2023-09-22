@@ -1,0 +1,32 @@
+stages:
+    - deploy
+
+deploy:
+    environment: 
+        name: server1/$CI_COMMIT_SHORT_SHA
+        auto_stop_in: 1 day
+    stage: deploy
+    tags:
+        - it-service
+    before_script:
+        # ssh-agent     ssh
+        - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        #      
+        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 600 ~/.ssh
+        - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+    script:
+        - echo "Test deploy:"
+        - scp ./server1/file_test_ci.txt ${DEV_USER}@${DEV_HOST}:/home/tester/
+        - ssh ${DEV_USER}@${DEV_HOST} 'systemctl status ssh; sleep 5; systemctl status ssh'
+    rules:
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+        - changes:
+            - server1/file_test_ci.txt    
+workflow:
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
