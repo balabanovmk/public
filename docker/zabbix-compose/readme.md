@@ -7,7 +7,7 @@ https://github.com/zabbix/zabbix-docker/tree/6.4
 4. Запустить из каталога 
 ```sudo docker compose -f docker-compose_v3_alpine_pgsql_latest.yaml up -d```
 5. Проверить, что zabbix запускается на 80 порту
-6. Проставить ```restart: always``` для сервисов
+6. Проставить ```restart: always``` для автозапуска zabbix сервисов
 - `zabbix-docker-db_data_pgsql-1`
 - `zabbix-docker-postgres-server-1`
 - `zabbix-docker-zabbix-server-1`
