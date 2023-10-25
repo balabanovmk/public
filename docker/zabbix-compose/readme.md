@@ -7,28 +7,8 @@ https://github.com/zabbix/zabbix-docker/tree/6.4
 4. Запустить из каталога 
 ```sudo docker compose -f docker-compose_v3_alpine_pgsql_latest.yaml up -d```
 5. Проверить, что zabbix запускается на 80 порту
-6. Создать unit-file для запуска как службы
-```/etc/systemd/system/zabbix-compose.service
-[Unit]
-Description=Zabbix services with docker-compose
-Requires=docker.service
-After=docker.service
-
-[Service]
-WorkingDirectory=/data/zabbix-docker/
-User=root
-Type=oneshot
-RemainAfterExit=yes
-
-ExecStartPre=/usr/local/bin/docker-compose -f /data/zabbix-docker/docker-compose_v3_alpine_pgsql_latest.yaml -v
-
-# Compose up
-ExecStart=/usr/local/bin/docker-compose -f /data/zabbix-docker/docker-compose_v3_alpine_pgsql_latest.yaml up -d
-
-# Compose down, remove containers
-ExecStop=/usr/local/bin/docker-compose -f /data/zabbix-docker/docker-compose_v3_alpine_pgsql_latest.yaml down
-
-[Install]
-WantedBy=multi-user.target
-```
-7. Автозапуск сервиса ```sudo systemctl enable zabbix-compose.service```
+6. Проставить ```restart: always``` для сервисов
+- `zabbix-docker-db_data_pgsql-1`
+- `zabbix-docker-postgres-server-1`
+- `zabbix-docker-zabbix-server-1`
+- `zabbix-docker-zabbix-web-nginx-pgsql-1`
