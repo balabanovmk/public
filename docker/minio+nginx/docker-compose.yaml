@@ -2,8 +2,9 @@ version: '3'
 
 services:
   minio:
+    container_name: minio
     image: minio/minio
-#    ports: можно пробросить порты наружу сразу, без nginx
+#    ports: Г¬Г®Г¦Г­Г® ГЇГ°Г®ГЎГ°Г®Г±ГЁГІГј ГЇГ®Г°ГІГ» Г­Г Г°ГіГ¦Гі Г±Г°Г Г§Гі, ГЎГҐГ§ nginx
 #      - "9000"
 #      - "9001"
     volumes:
@@ -22,6 +23,7 @@ services:
 
 
   nginx:
+    container_name: nginx-minio
     image: nginx:1.19.2-alpine
     hostname: nginx
     volumes:
